@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 
 	"example.com/downloader/filemanager"
 )
@@ -18,15 +19,43 @@ const (
 )
 
 func main() {
-	fm := filemanager.New(inputFilePath, outputDirPath)
-	lines, _ := fm.ReadFile()
-	fmt.Println(lines)
 
-	fm.CreateEmptyDir()
+	fm := filemanager.New(inputFilePath, outputDirPath)
+	lines, err := fm.ReadFile()
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	err = fm.CreateEmptyDir()
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var wg sync.WaitGroup
+
+	semaphore := make(chan struct{}, maxWorkers)
 
 	for _, url := range lines {
+
+		wg.Add(1)
+		semaphore <- struct{}{}
+		go func(url string) {
+			defer wg.Done()
+			defer func() { <-semaphore }()
+
+			err = downloadFromUrl(url)
+			if err != nil {
+				fmt.Println(err)
+			}
+		}(url)
+
 		downloadFromUrl(url)
 	}
+	wg.Wait()
 }
 
 func downloadFromUrl(url string) error {
