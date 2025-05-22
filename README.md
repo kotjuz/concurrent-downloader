@@ -14,17 +14,17 @@ A simple Go program for **concurrently downloading files from provided URLs**, w
 ---
 
 # CLI flags
--input string
+-input string   
     Path to the file containing URLs (default: "urls.txt")
 
--output string
+-output string   
     Directory to save downloaded files (default: "downloaded")
 
--workers int
+-workers int   
     Number of concurrent download workers (default: 4)
 
 
--help
+-help   
     Display flags
 
 
