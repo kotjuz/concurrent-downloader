@@ -7,14 +7,14 @@ import (
 )
 
 type Filemanager struct {
-	inputFilePath  string
-	outputFilePath string
+	inputFilePath string
+	outputDirPath string
 }
 
 func New(inputPath, outputPath string) Filemanager {
 	return Filemanager{
-		inputFilePath:  inputPath,
-		outputFilePath: outputPath,
+		inputFilePath: inputPath,
+		outputDirPath: outputPath,
 	}
 }
 
@@ -45,6 +45,6 @@ func (fm Filemanager) ReadFile() ([]string, error) {
 }
 
 func (fm Filemanager) CreateEmptyDir() error {
-	err := os.MkdirAll(fm.outputFilePath, 0777)
+	err := os.MkdirAll(fm.outputDirPath, 0777)
 	return err
 }

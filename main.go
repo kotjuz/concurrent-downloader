@@ -14,10 +14,11 @@ import (
 const (
 	inputFilePath = "./urls.txt"
 	maxWorkers    = 4
+	outputDirPath = "downloaded/"
 )
 
 func main() {
-	fm := filemanager.New(inputFilePath, "downloaded/")
+	fm := filemanager.New(inputFilePath, outputDirPath)
 	lines, _ := fm.ReadFile()
 	fmt.Println(lines)
 
@@ -39,8 +40,8 @@ func downloadFromUrl(url string) error {
 	parts := strings.Split(url, "/")
 	filename := parts[len(parts)-1]
 
-	filepath := filepath.Join("downloaded/", filename)
-	fmt.Println(filepath)
+	filepath := filepath.Join(outputDirPath, filename)
+
 	out, err := os.Create(filepath)
 
 	if err != nil {
