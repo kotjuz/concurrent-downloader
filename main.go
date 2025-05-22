@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,15 +13,13 @@ import (
 	"example.com/downloader/filemanager"
 )
 
-const (
-	inputFilePath = "./urls.txt"
-	maxWorkers    = 4
-	outputDirPath = "downloaded/"
-)
-
 func main() {
+	maxWorkers := flag.Int("workers", 4, "Number of concurrent download workers")
+	inputFilePath := flag.String("input", "urls.txt", "Path to input file")
+	outputDirPath := flag.String("output", "downloaded", "Path to outpu directory")
+	flag.Parse()
 
-	fm := filemanager.New(inputFilePath, outputDirPath)
+	fm := filemanager.New(*inputFilePath, *outputDirPath)
 	lines, err := fm.ReadFile()
 
 	if err != nil {
@@ -37,7 +36,7 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	semaphore := make(chan struct{}, maxWorkers)
+	semaphore := make(chan struct{}, *maxWorkers)
 
 	for _, url := range lines {
 
@@ -47,18 +46,18 @@ func main() {
 			defer wg.Done()
 			defer func() { <-semaphore }()
 
-			err = downloadFromUrl(url)
+			err = downloadFromUrl(url, *outputDirPath)
 			if err != nil {
 				fmt.Println(err)
 			}
 		}(url)
 
-		downloadFromUrl(url)
+		downloadFromUrl(url, *outputDirPath)
 	}
 	wg.Wait()
 }
 
-func downloadFromUrl(url string) error {
+func downloadFromUrl(url string, outputDirPath string) error {
 	response, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
