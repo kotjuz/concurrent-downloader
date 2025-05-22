@@ -1,0 +1,9 @@
+https://sample-files.com/downloads/documents/txt/simple.txt
+https://sample-files.com/downloads/documents/txt/long-doc.txt
+https://sample-files.com/downloads/documents/txt/ascii-art.txt
+https://sample-files.com/downloads/documents/txt/multilang.txt
+https://sample-files.com/downloads/documents/txt/data.txt
+https://sample-files.com/downloads/documents/pdf/basic-text.pdf
+https://sample-files.com/downloads/documents/pdf/fillable-form.pdf
+https://sample-files.com/downloads/documents/pdf/large-doc.pdf
+https://sample-files.com/downloads/documents/pdf/dev-example.pdf
